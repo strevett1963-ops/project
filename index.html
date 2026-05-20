@@ -9,12 +9,24 @@
 </head>
 <body>
   <div id="hud">
-    <div id="status">Loading...</div>
-    <div id="controls">Use arrow keys to move/turn. Space to shoot. Restart to play again.</div>
+    <div class="panel">
+      <div class="label">Player</div>
+      <div class="meter"><div id="playerHealth"></div></div>
+    </div>
+    <div class="panel center-panel">
+      <div id="status">Loading arena...</div>
+      <div id="controls">Arrow keys: move and turn | Space: shoot</div>
+    </div>
+    <div class="panel">
+      <div class="label">Opponent</div>
+      <div class="meter"><div id="enemyHealth"></div></div>
+    </div>
   </div>
+  <div id="crosshair" aria-hidden="true"></div>
   <div id="overlay">
-    <div id="message"></div>
-    <button id="restart">Restart</button>
+    <div id="message">Simple 3D FPS Arena</div>
+    <p id="summary">Defeat the computer opponent before it lands enough shots on you.</p>
+    <button id="restart">Start Game</button>
   </div>
   <script src="main.js"></script>
 </body>
