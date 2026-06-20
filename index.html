@@ -3,31 +3,131 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Simple 3D FPS Arena</title>
+  <title>Gold News Bias Monitor</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
 </head>
 <body>
-  <div id="hud">
-    <div class="panel">
-      <div class="label">Player</div>
-      <div class="meter"><div id="playerHealth"></div></div>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">GC / XAUUSD discipline helper</p>
+      <h1>Gold News Bias Monitor</h1>
+      <p class="hero-copy">
+        Poll a high-impact economic news feed and convert each release into a
+        simple gold bias label. Use this as a checklist aid, not a trade signal.
+      </p>
     </div>
-    <div class="panel center-panel">
-      <div id="status">Loading arena...</div>
-      <div id="controls">Arrow keys: move and turn | Space: shoot</div>
+    <div class="status-card" aria-live="polite">
+      <span id="connectionStatus" class="status-pill">Checking feed...</span>
+      <span id="lastChecked">Last checked: never</span>
+      <span id="nextCheck">Next check: --</span>
     </div>
-    <div class="panel">
-      <div class="label">Opponent</div>
-      <div class="meter"><div id="enemyHealth"></div></div>
-    </div>
-  </div>
-  <div id="crosshair" aria-hidden="true"></div>
-  <div id="overlay">
-    <div id="message">Simple 3D FPS Arena</div>
-    <p id="summary">Defeat the computer opponent before it lands enough shots on you.</p>
-    <button id="restart">Start Game</button>
-  </div>
+  </header>
+
+  <main>
+    <section class="bias-grid" aria-labelledby="currentBiasTitle">
+      <article id="biasCard" class="card bias-card wait">
+        <p class="card-kicker">Current gold bias</p>
+        <h2 id="currentBiasTitle">WAIT</h2>
+        <p id="biasSummary">Waiting for a high-impact release with an actual figure.</p>
+        <dl class="score-list">
+          <div>
+            <dt>Long pressure</dt>
+            <dd id="longScore">0</dd>
+          </div>
+          <div>
+            <dt>Short pressure</dt>
+            <dd id="shortScore">0</dd>
+          </div>
+          <div>
+            <dt>Confidence</dt>
+            <dd id="confidence">Low</dd>
+          </div>
+        </dl>
+      </article>
+
+      <article class="card checklist-card">
+        <p class="card-kicker">ADD-friendly rule lock</p>
+        <h2>Before any news trade</h2>
+        <ul>
+          <li>Wait for the first spike to finish.</li>
+          <li>Confirm DXY and US yields agree with the bias.</li>
+          <li>Use a bracket order before entry.</li>
+          <li>One news trade max; stop if daily loss is hit.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="card controls-card" aria-labelledby="settingsTitle">
+      <div>
+        <p class="card-kicker">Live checking</p>
+        <h2 id="settingsTitle">News feed settings</h2>
+        <p>
+          This static page polls JSON from the URL below. The included
+          <code>news-feed.json</code> is a sample; replace the URL with your
+          own economic-calendar proxy or hosted feed for live data.
+        </p>
+      </div>
+      <form id="settingsForm" class="settings-form">
+        <label>
+          Feed URL
+          <input id="feedUrl" type="url" value="news-feed.json" placeholder="https://example.com/news-feed.json">
+        </label>
+        <label>
+          Refresh every
+          <select id="refreshSeconds">
+            <option value="30">30 seconds</option>
+            <option value="60" selected>60 seconds</option>
+            <option value="120">2 minutes</option>
+            <option value="300">5 minutes</option>
+          </select>
+        </label>
+        <label class="checkbox-label">
+          <input id="highImpactOnly" type="checkbox" checked>
+          High-impact releases only
+        </label>
+        <button type="submit">Save and refresh</button>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="releaseTitle">
+      <div class="section-heading">
+        <div>
+          <p class="card-kicker">Latest releases</p>
+          <h2 id="releaseTitle">High-impact news chart</h2>
+        </div>
+        <button id="refreshNow" type="button">Refresh now</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Event</th>
+              <th>Actual</th>
+              <th>Forecast</th>
+              <th>Surprise</th>
+              <th>Gold bias</th>
+              <th>Reason</th>
+            </tr>
+          </thead>
+          <tbody id="releaseRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="rulesTitle">
+      <p class="card-kicker">Reference rules</p>
+      <h2 id="rulesTitle">How figures usually bias gold</h2>
+      <div class="rules-grid" id="rulesGrid"></div>
+    </section>
+
+    <section class="risk-note">
+      <strong>Important:</strong> This is an educational decision-support page.
+      News releases can whipsaw gold sharply. Confirm with price action, DXY,
+      and yields before trading.
+    </section>
+  </main>
+
   <script src="main.js"></script>
 </body>
 </html>
