@@ -238,7 +238,7 @@ function normalizeEvent(rawEvent) {
   }
 
   var timeValue = rawEvent.time || rawEvent.datetime || rawEvent.releaseTime || rawEvent.date;
-  var timestamp = timeValue ? new Date(timeValue).getTime() : Date.now();
+  var timestamp = parseTimestamp(timeValue);
 
   return {
     id: rawEvent.id || eventName + "-" + timestamp,
@@ -284,6 +284,25 @@ function inferCategory(category, eventName) {
   }
 
   return "growth";
+}
+
+function parseTimestamp(timeValue) {
+  if (!timeValue) {
+    return Date.now();
+  }
+
+  var text = String(timeValue).trim();
+  var relative = text.match(/^now\s*([+-])\s*(\d+)\s*([mhd])$/i);
+  if (relative) {
+    var sign = relative[1] === "-" ? -1 : 1;
+    var amount = Number(relative[2]);
+    var unit = relative[3].toLowerCase();
+    var unitMs = unit === "d" ? 24 * 60 * 60 * 1000 : unit === "h" ? 60 * 60 * 1000 : 60 * 1000;
+    return Date.now() + sign * amount * unitMs;
+  }
+
+  var timestamp = new Date(text).getTime();
+  return Number.isFinite(timestamp) ? timestamp : Date.now();
 }
 
 function scoreEvent(event) {
@@ -336,10 +355,12 @@ function scoreEvent(event) {
     }
   }
 
+  var score = scoreMagnitude(event, magnitude);
+
   return Object.assign({}, event, {
     bias: direction,
-    score: scoreMagnitude(event, magnitude),
-    confidence: confidenceFromMagnitude(magnitude),
+    score: score,
+    confidence: confidenceFromScore(score),
     surpriseLabel: formatSurprise(surprise),
     reason: reason
   });
@@ -382,7 +403,7 @@ function getSurprise(event) {
   }
 
   return {
-    value: actual.value - forecast.value,
+    value: roundTo(actual.value - forecast.value, 6),
     actual: actual.value,
     forecast: forecast.value,
     hasActual: true,
@@ -454,11 +475,11 @@ function scoreMagnitude(event, magnitude) {
   return 1;
 }
 
-function confidenceFromMagnitude(magnitude) {
-  if (magnitude >= 0.3 || magnitude >= 100000) {
+function confidenceFromScore(score) {
+  if (score >= 3) {
     return "High";
   }
-  if (magnitude >= 0.1 || magnitude >= 8000) {
+  if (score >= 2) {
     return "Medium";
   }
   return "Low";

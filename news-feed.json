@@ -2,7 +2,7 @@
   "events": [
     {
       "id": "cpi-core-sample",
-      "time": "2026-06-20T15:30:00Z",
+      "time": "now-46m",
       "currency": "USD",
       "impact": "high",
       "category": "inflation",
@@ -14,7 +14,7 @@
     },
     {
       "id": "nfp-sample",
-      "time": "2026-06-20T13:30:00Z",
+      "time": "now-3h",
       "currency": "USD",
       "impact": "high",
       "category": "labor",
@@ -26,7 +26,7 @@
     },
     {
       "id": "fed-sample",
-      "time": "2026-06-20T12:00:00Z",
+      "time": "now-5h",
       "currency": "USD",
       "impact": "high",
       "category": "fed",
@@ -39,7 +39,7 @@
     },
     {
       "id": "retail-sales-sample",
-      "time": "2026-06-19T13:30:00Z",
+      "time": "now-1d",
       "currency": "USD",
       "impact": "medium",
       "category": "growth",
